@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.A.I Invest — Internal Version</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E8D4A0;
+            --navy: #0A0E1F;
+            --navy-light: #1a1f3a;
+            --text-primary: rgba(255,255,255,0.95);
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.5);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .header {
+            background: rgba(10,14,31,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(201,168,76,0.2);
+            text-align: center;
+        }
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+        .company-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            letter-spacing: 1px;
+        }
+        .trial-badge {
+            color: var(--gold-light);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem 4rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold-light);
+            margin-bottom: 1.5rem;
+        }
+        .cities-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.2);
+        }
+        .cities-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .cities-container::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+        }
+        .cities-container::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 6px;
+        }
+        .country-section {
+            margin-bottom: 2rem;
+        }
+        .country-title {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(201,168,76,0.3);
+        }
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.8rem;
+        }
+        .city-btn {
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.03);
+            border: 2px solid rgba(201,168,76,0.3);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .city-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .city-btn.selected {
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.15);
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            color: var(--gold);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .slider-container {
+            margin: 1rem 0;
+        }
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(201,168,76,0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold);
+            cursor: pointer;
+        }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold);
+            cursor: pointer;
+            border: none;
+        }
+        .slider-value {
+            display: block;
+            text-align: center;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--navy);
+            box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(201,168,76,0.6);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 0.7rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .btn-secondary:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .opp-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .opp-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+        }
+        .opp-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--gold-light);
+            margin-bottom: 1rem;
+        }
+        .opp-details {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        .opp-price {
+            font-size: 1.3rem;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10,14,31,0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, var(--navy-light), var(--navy));
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 1000px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 2rem;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(201,168,76,0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .metric-item {
+            background: rgba(201,168,76,0.1);
+            border-left: 4px solid var(--gold);
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+        .metric-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-bottom: 0.5rem;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .summary-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .summary-section h3 {
+            color: var(--gold-light);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--navy-light);
+            border: 1px solid var(--gold);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 3000;
+            transition: transform 0.4s;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">H.A.I INVEST</div>
+        <div class="company-name">by H.Investments NL B.V.</div>
+        <div class="company-name">H.Investments NL B.V. — Internal Investment Tool</div>
+    </div>
+
+    <div class="container">
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(201,168,76,0.2); border-radius: 12px; padding: 2.5rem; margin-bottom: 2rem;">
+            <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem;">Find Your Perfect Investment</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.05rem;"><strong style="color: var(--gold);">Search 50+ global markets</strong> with YOUR exact criteria: capital, loans, returns, risk tolerance. Get AI-powered market intelligence and comprehensive Executive Summaries instantly.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                <div style="background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 1.5rem;">
+                    <h3 style="color: var(--gold); margin-bottom: 0.5rem;">🌍 Global Markets</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Search 50+ cities across USA, Europe with live market data</p>
+                </div>
+                <div style="background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 1.5rem;">
+                    <h3 style="color: var(--gold); margin-bottom: 0.5rem;">💰 Smart Criteria</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Match by capital, loans, yield, risk, property type</p>
+                </div>
+                <div style="background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 1.5rem;">
+                    <h3 style="color: var(--gold); margin-bottom: 0.5rem;">📊 Instant Analysis</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Get detailed Executive Summaries with financial projections</p>
+                </div>
+                <div style="background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 1.5rem;">
+                    <h3 style="color: var(--gold); margin-bottom: 0.5rem;">⚡ Real-Time Search</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">AI searches current market for actual opportunities</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Select Target City</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Choose from 50+ cities organized by country</p>
+            
+            <div class="cities-container" id="citiesContainer"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Investment Criteria</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Own Capital (€)</label>
+                    <input type="number" class="form-input" id="ownCapital" placeholder="e.g., 500000" step="5000" value="500000">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Loan Amount (€)</label>
+                    <input type="number" class="form-input" id="loanAmount" placeholder="e.g., 400000" step="5000">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Interest Rate (%)</label>
+                    <input type="number" class="form-input" id="interestRate" placeholder="e.g., 3.5" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Expected Yield (%)</label>
+                    <input type="number" class="form-input" id="expectedYield" placeholder="e.g., 6.5" step="0.1">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Max Price</label>
+                <div class="slider-container">
+                    <input type="range" class="slider" id="priceSlider" min="100000" max="50000000" step="5000" value="1000000" oninput="updatePriceDisplay()">
+                    <span class="slider-value" id="priceDisplay">€1,000,000</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Property Type</label>
+                    <select class="form-select" id="propertyType">
+                        <option>Residential</option>
+                        <option>Commercial</option>
+                        <option>Mixed-Use</option>
+                        <option>Industrial</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Risk Tolerance</label>
+                    <select class="form-select" id="riskLevel">
+                        <option>Low</option>
+                        <option selected>Medium</option>
+                        <option>High</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" id="searchBtn" onclick="searchOpportunities()">🔍 Search Opportunities</button>
+                <div id="searchCooldownNotice" style="margin-top: 1rem; color: var(--gold); font-size: 0.95rem;"></div>
+            </div>
+        </div>
+
+        <div id="resultsSection" style="display: none;">
+            <div class="card">
+                <h2 class="card-title">Investment Opportunities</h2>
+                <div class="opportunities-grid" id="opportunitiesGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="apiKeyModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h2 class="modal-title">Connect API Key</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; text-align: center;">
+                Get free at <strong style="color: var(--gold);">console.anthropic.com</strong>
+            </p>
+            <div class="form-group">
+                <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-ant-api03-...">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="saveApiKey()">Connect</button>
+        </div>
+    </div>
+
+    <div class="modal" id="loadingModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h2 class="modal-title" id="loadingTitle">Searching...</h2>
+            <div class="loading-spinner"></div>
+            <p id="loadingText" style="text-align: center; color: var(--text-secondary);">Finding investment opportunities...</p>
+        </div>
+    </div>
+
+    <div class="modal" id="summaryModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeSummaryModal()">×</button>
+            <div id="summaryContent"></div>
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(201,168,76,0.2);">
+                <button class="btn btn-secondary" onclick="downloadSummaryWord()">📥 Download Word</button>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                    For professional analysis: H.Investments NL B.V. | office@hiinvestment.info
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let apiKey = sessionStorage.getItem('hai_invest_api_key') || '';
+        let selectedCity = '';
+        let currentOpportunities = [];
+        let currentSummary = '';
+        // No trial limits - internal version
+        
+        // Rate limiting (Anthropic: 5 requests/minute)
+        let lastSearchTime = 0;
+        let lastSummaryTime = 0;
+        const MIN_SEARCH_INTERVAL = 12000; // 12 seconds between searches
+        const MIN_SUMMARY_INTERVAL = 12000; // 12 seconds between summaries
+        let searchCountdownInterval = null;
+        
+        // Update search button status with countdown
+        function updateSearchCooldown() {
+            const now = Date.now();
+            const remainingMs = MIN_SEARCH_INTERVAL - (now - lastSearchTime);
+            const btn = document.getElementById('searchBtn');
+            const notice = document.getElementById('searchCooldownNotice');
+            
+            if (remainingMs > 0) {
+                const remainingSeconds = Math.ceil(remainingMs / 1000);
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                notice.textContent = `⏱️ Next search ready in ${remainingSeconds}s...`;
+                notice.style.display = 'block';
+            } else {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                notice.textContent = '✅ Ready to search!';
+                notice.style.color = '#4ade80';
+                setTimeout(() => { notice.style.display = 'none'; }, 2000);
+                if (searchCountdownInterval) {
+                    clearInterval(searchCountdownInterval);
+                    searchCountdownInterval = null;
+                }
+            }
+        }
+        
+        function startSearchCooldown() {
+            if (searchCountdownInterval) clearInterval(searchCountdownInterval);
+            updateSearchCooldown();
+            searchCountdownInterval = setInterval(updateSearchCooldown, 1000);
+        }
+        
+        const CITIES = {
+            'Belgium': ['Antwerp', 'Bruges', 'Brussels', 'Ghent', 'Liège'],
+            'France': ['Bordeaux', 'Lyon', 'Marseille', 'Nice', 'Paris'],
+            'Germany': ['Berlin', 'Cologne', 'Frankfurt', 'Hamburg', 'Munich'],
+            'Italy': ['Florence', 'Milan', 'Naples', 'Rome', 'Venice'],
+            'Netherlands': ['Amsterdam', 'Eindhoven', 'Rotterdam', 'The Hague', 'Utrecht'],
+            'Portugal': ['Coimbra', 'Faro', 'Lisbon', 'Porto'],
+            'Spain': ['Barcelona', 'Madrid', 'Malaga', 'Seville', 'Valencia'],
+            'Switzerland': ['Basel', 'Bern', 'Geneva', 'Zurich'],
+            'UK': ['Birmingham', 'Edinburgh', 'Liverpool', 'London', 'Manchester'],
+            'USA': ['Atlanta', 'Austin', 'Boston', 'Chicago', 'Denver', 'Los Angeles', 'Miami', 'New York', 'San Francisco', 'Seattle'],
+            'Israel': ['Haifa', 'Jerusalem', 'Tel Aviv'],
+            'UAE': ['Abu Dhabi', 'Dubai']
+        };
+        
+        function displayCities() {
+            const container = document.getElementById('citiesContainer');
+            container.innerHTML = Object.entries(CITIES).map(([country, cities]) => `
+                <div class="country-section">
+                    <div class="country-title">${country}</div>
+                    <div class="cities-grid">
+                        ${cities.map(city => `
+                            <div class="city-btn" onclick="selectCity('${city}, ${country}')">${city}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        displayCities();
+        
+        function selectCity(cityCountry) {
+            selectedCity = cityCountry;
+            document.querySelectorAll('.city-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+        
+        function updatePriceDisplay() {
+            const value = parseInt(document.getElementById('priceSlider').value);
+            const formatted = value >= 1000000 ? 
+                '€' + (value/1000000).toFixed(1) + 'M' : 
+                '€' + (value/1000).toFixed(0) + 'K';
+            document.getElementById('priceDisplay').textContent = formatted;
+        }
+        
+        if (!apiKey) {
+            setTimeout(() => document.getElementById('apiKeyModal').classList.add('show'), 500);
+        }
+        
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (!key.startsWith('sk-ant-')) {
+                showToast('Invalid API key');
+                return;
+            }
+            apiKey = key;
+            sessionStorage.setItem('hai_invest_api_key', key);
+            document.getElementById('apiKeyModal').classList.remove('show');
+            showToast('API key saved!');
+        }
+        
+        async function searchOpportunities() {
+            if (!apiKey) {
+                document.getElementById('apiKeyModal').classList.add('show');
+                return;
+            }
+            
+            // Check rate limit
+            const now = Date.now();
+            const timeSinceLastSearch = now - lastSearchTime;
+            if (timeSinceLastSearch < MIN_SEARCH_INTERVAL) {
+                const waitSeconds = Math.ceil((MIN_SEARCH_INTERVAL - timeSinceLastSearch) / 1000);
+                showToast(`⏱️ Rate limit - Wait ${waitSeconds}s`);
+                return;
+            }
+            
+            // No trial limits - internal version
+            
+            if (!selectedCity) {
+                showToast('Please select a city first');
+                return;
+            }
+            
+            const ownCapital = parseInt(document.getElementById('ownCapital').value) || 0;
+            const loanAmount = parseInt(document.getElementById('loanAmount').value) || 0;
+            const maxPrice = parseInt(document.getElementById('priceSlider').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 0;
+            const expectedYield = parseFloat(document.getElementById('expectedYield').value) || 0;
+            const propertyType = document.getElementById('propertyType').value;
+            const riskLevel = document.getElementById('riskLevel').value;
+            
+            // Update loading text for search
+            document.getElementById('loadingTitle').textContent = 'Searching...';
+            document.getElementById('loadingText').textContent = 'Finding investment opportunities...';
+            document.getElementById('loadingModal').classList.add('show');
+            document.getElementById('searchBtn').disabled = true;
+            
+            try {
+                const query = `Find 3-5 REAL investment opportunities for ${propertyType} properties in ${selectedCity}.
+
+Criteria:
+- Own Capital: €${ownCapital.toLocaleString()}
+- Loan: €${loanAmount.toLocaleString()} at ${interestRate}%
+- Max Price: €${maxPrice.toLocaleString()}
+- Expected Yield: ${expectedYield}%
+- Risk Tolerance: ${riskLevel}
+
+Search for ACTUAL properties currently on market using web search.
+
+Return ONLY valid JSON:
+[{"name":"Property Name","location":"${selectedCity}","type":"${propertyType}","price":000000,"yield":0.0,"area":000,"desc":"Brief description"}]
+
+No markdown, just JSON.`;
+
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        apiKey: apiKey,
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 4000,
+                        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+                        messages: [{ role: 'user', content: query }]
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Search failed');
+                
+                const data = await response.json();
+                let opportunities = [];
+                
+                for (const block of data.content) {
+                    if (block.type === 'text') {
+                        const text = block.text.replace(/```json/g, '').replace(/```/g, '').trim();
+                        const jsonStart = text.indexOf('[');
+                        const jsonEnd = text.lastIndexOf(']');
+                        
+                        if (jsonStart >= 0 && jsonEnd > jsonStart) {
+                            try {
+                                const parsed = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+                                if (Array.isArray(parsed) && parsed.length > 0) {
+                                    opportunities = parsed.slice(0, 3);
+                                    break;
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                }
+                
+                // Update rate limit tracker and start countdown
+                lastSearchTime = Date.now();
+                startSearchCooldown();
+                
+                // No trial tracking - internal version
+                
+                document.getElementById('loadingModal').classList.remove('show');
+                document.getElementById('searchBtn').disabled = false;
+                
+                if (opportunities.length > 0) {
+                    displayOpportunities(opportunities);
+                } else {
+                    showToast('No results found - try different criteria');
+                }
+                
+            } catch (err) {
+                document.getElementById('loadingModal').classList.remove('show');
+                document.getElementById('searchBtn').disabled = false;
+                showToast('Search error: ' + err.message);
+            }
+        }
+        
+        function displayOpportunities(opportunities) {
+            currentOpportunities = opportunities;
+            const grid = document.getElementById('opportunitiesGrid');
+            grid.innerHTML = opportunities.map((opp, idx) => `
+                <div class="opp-card">
+                    <div class="opp-title">${opp.name}</div>
+                    <div class="opp-details">
+                        📍 ${opp.location}<br>
+                        🏢 ${opp.type}<br>
+                        📐 ${opp.area || 'N/A'}m²<br>
+                        📈 Yield: ${opp.yield}%<br>
+                        ${opp.desc}
+                    </div>
+                    <div class="opp-price">€${opp.price.toLocaleString()}</div>
+                    <button class="btn btn-secondary" style="width: 100%;" onclick="generateExecutiveSummary(${idx})">📊 Executive Summary</button>
+                </div>
+            `).join('');
+            
+            document.getElementById('resultsSection').style.display = 'block';
+            showToast(`Found ${opportunities.length} opportunities!`);
+        }
+        
+        async function generateExecutiveSummary(idx) {
+            // Check rate limit
+            const now = Date.now();
+            const timeSinceLastSummary = now - lastSummaryTime;
+            if (timeSinceLastSummary < MIN_SUMMARY_INTERVAL) {
+                const waitSeconds = Math.ceil((MIN_SUMMARY_INTERVAL - timeSinceLastSummary) / 1000);
+                showToast(`⏱️ Rate limit - Wait ${waitSeconds}s`);
+                return;
+            }
+            
+            const opp = currentOpportunities[idx];
+            const ownCapital = parseInt(document.getElementById('ownCapital').value) || 0;
+            const loanAmount = parseInt(document.getElementById('loanAmount').value) || 0;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 0;
+            const expectedYield = parseFloat(document.getElementById('expectedYield').value) || 0;
+            const riskLevel = document.getElementById('riskLevel').value;
+            
+            // Update loading text for report generation
+            document.getElementById('loadingTitle').textContent = 'Generating Report...';
+            document.getElementById('loadingText').textContent = 'Creating executive summary with AI analysis...';
+            document.getElementById('loadingModal').classList.add('show');
+            
+            try {
+                const prompt = `Generate VISUAL Executive Summary for this investment matching the exact format below:
+
+Property: ${opp.name}
+Location: ${opp.location}
+Price: €${opp.price.toLocaleString()}
+Area: ${opp.area || 'N/A'}m²
+Expected Yield: ${opp.yield}%
+
+Investment Structure:
+- Own Capital: €${ownCapital.toLocaleString()}
+- Loan: €${loanAmount.toLocaleString()} @ ${interestRate}%
+- Total Investment: €${(ownCapital + loanAmount).toLocaleString()}
+- Risk Profile: ${riskLevel}
+- Target Yield: ${expectedYield}%
+
+Use THIS FORMAT:
+
+═══════════════════════════════════════════════════════
+EXECUTIVE SUMMARY
+${opp.name}
+
+Generated by H.A.I INVEST
+${new Date().toLocaleString()}
+═══════════════════════════════════════════════════════
+
+📊 INVESTMENT OVERVIEW
+
+Property: ${opp.name}
+Location: ${opp.location}
+Type: ${opp.type}
+Price: €${opp.price.toLocaleString()}
+Total Investment: €${(ownCapital + loanAmount).toLocaleString()}
+
+═══════════════════════════════════════════════════════
+💰 KEY FINANCIAL METRICS
+═══════════════════════════════════════════════════════
+
+Expected Yield: ${opp.yield}%
+ROI (Annual): [X.X]%
+Payback Period: [XX] years
+Monthly Cash Flow: €[X,XXX]
+LTV Ratio: [XX]%
+
+═══════════════════════════════════════════════════════
+📈 MARKET ANALYSIS — ${opp.location}
+═══════════════════════════════════════════════════════
+
+Market Conditions: [FAVORABLE/MODERATE/CHALLENGING]
+Rental Demand: [HIGH/MEDIUM/LOW]
+Price Trend (12mo): [+/-XX]%
+Occupancy Rate: [XX]%
+Competition Level: [LOW/MEDIUM/HIGH]
+
+Market Insights:
+• [Key market insight 1]
+• [Key market insight 2]
+• [Key market insight 3]
+
+═══════════════════════════════════════════════════════
+⚠️ RISK ASSESSMENT
+═══════════════════════════════════════════════════════
+
+Overall Risk: [LOW 🟢 / MEDIUM 🟡 / HIGH 🔴]
+
+Risk Factors:
+• Market Risk: [Assessment]
+• Liquidity Risk: [Assessment]
+• Location Risk: [Assessment]
+• Interest Rate Risk: [Assessment]
+
+Mitigation Strategies:
+• [Strategy 1]
+• [Strategy 2]
+• [Strategy 3]
+
+═══════════════════════════════════════════════════════
+💡 FINANCIAL PROJECTIONS (5 YEARS)
+═══════════════════════════════════════════════════════
+
+Year 1: €[XX,XXX] net cash flow
+Year 2: €[XX,XXX] net cash flow
+Year 3: €[XX,XXX] net cash flow
+Year 4: €[XX,XXX] net cash flow
+Year 5: €[XX,XXX] net cash flow
+
+Total 5-Year Return: €[XXX,XXX]
+Capital Appreciation (estimated): [XX]%
+
+═══════════════════════════════════════════════════════
+🎯 RECOMMENDATIONS
+═══════════════════════════════════════════════════════
+
+Investment Decision: [RECOMMEND ✅ / PROCEED WITH CAUTION ⚠️ / PASS 🔴]
+
+Key Actions:
+1. [Specific action item]
+2. [Specific action item]
+3. [Specific action item]
+
+Rationale:
+[2-3 sentences explaining recommendation]
+
+═══════════════════════════════════════════════════════
+
+Be specific with numbers. Use VISUAL indicators (✅⚠️🔴🟢🟡). Keep it under 1200 words.`;
+
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        apiKey: apiKey,
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 6000,
+                        messages: [{ role: 'user', content: prompt }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    throw new Error(errorData.error?.message || 'Generation failed');
+                }
+                
+                const data = await response.json();
+                console.log('API Response:', data);
+                const content = data.content.find(c => c.type === 'text')?.text || '';
+                
+                if (!content) {
+                    throw new Error('No content generated');
+                }
+                
+                currentSummary = content;
+                
+                document.getElementById('loadingModal').classList.remove('show');
+                document.getElementById('summaryContent').innerHTML = `
+                    <h2 class="modal-title">Executive Summary: ${opp.name}</h2>
+                    <div style="white-space: pre-wrap; line-height: 1.8; font-family: Inter, sans-serif; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 8px; color: var(--text-secondary);">${content}</div>
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(201,168,76,0.1); border-left: 4px solid var(--gold); border-radius: 4px;">
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Generated by <strong style="color: var(--gold);">H.A.I INVEST</strong></div>
+                    </div>
+                `;
+                
+                // Update rate limit tracker
+                lastSummaryTime = Date.now();
+                
+                document.getElementById('summaryModal').classList.add('show');
+                
+            } catch (err) {
+                console.error('Executive Summary Error:', err);
+                document.getElementById('loadingModal').classList.remove('show');
+                showToast('Error generating summary: ' + err.message);
+            }
+        }
+        
+        function closeSummaryModal() {
+            document.getElementById('summaryModal').classList.remove('show');
+        }
+        
+        function downloadSummaryWord() {
+            try {
+                const content = `H.A.I INVEST
+EXECUTIVE SUMMARY
+
+Generated: ${new Date().toLocaleString()}
+
+═══════════════════════════════════════════════════════
+
+${currentSummary}
+
+═══════════════════════════════════════════════════════
+
+This report was generated by H.A.I INVEST.
+
+For professional analysis services, contact:
+H.Investments NL B.V.
+office@hiinvestment.info
+
+© ${new Date().getFullYear()} H.Investments NL B.V.
+`;
+                const blob = new Blob([content], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `HAI_Executive_Summary_${Date.now()}.doc`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('Download started!');
+            } catch (err) {
+                showToast('Download error: ' + err.message);
+            }
+        }
+        
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
