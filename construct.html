@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.A.I Construct — Internal Version</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E8D4A0;
+            --navy: #0A0E1F;
+            --navy-light: #1a1f3a;
+            --text-primary: rgba(255,255,255,0.95);
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.5);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .header {
+            background: rgba(10,14,31,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(201,168,76,0.2);
+            text-align: center;
+        }
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+        .company-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            letter-spacing: 1px;
+        }
+        .trial-badge {
+            color: var(--gold-light);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem 4rem;
+        }
+        .intro {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .intro h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .feature {
+            background: rgba(201,168,76,0.05);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .feature h3 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold-light);
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            color: var(--gold);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .upload-zone {
+            border: 2px dashed rgba(201,168,76,0.4);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-zone:hover {
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.05);
+        }
+        .upload-zone input {
+            display: none;
+        }
+        .file-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 6px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .reports-scroll {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+        .reports-scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+        .reports-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 5px;
+        }
+        .reports-scroll::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 5px;
+        }
+        .report-section {
+            margin-bottom: 2.5rem;
+        }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(201,168,76,0.3);
+        }
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        .report-card {
+            background: rgba(255,255,255,0.03);
+            border: 2px solid rgba(201,168,76,0.2);
+            border-radius: 8px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .report-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        .report-card.selected {
+            border-color: var(--gold);
+            background: rgba(201,168,76,0.1);
+        }
+        .report-icon {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .report-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--navy);
+            box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(201,168,76,0.6);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 0.7rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .btn-secondary:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10,14,31,0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, var(--navy-light), var(--navy));
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 2rem;
+        }
+        .modal-close {
+            float: right;
+            font-size: 2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            clear: both;
+        }
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(201,168,76,0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .report-visual {
+            background: linear-gradient(135deg, var(--navy-light), var(--navy));
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        .report-header {
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .report-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--gold-light);
+            margin-bottom: 0.5rem;
+        }
+        .report-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--navy-light);
+            border: 1px solid var(--gold);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 3000;
+            transition: transform 0.4s;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">H.A.I CONSTRUCT</div>
+        <div class="company-name">by H.Investments NL B.V.</div>
+        <div class="company-name">H.Investments NL B.V. — Internal Tool</div>
+    </div>
+
+    <div class="container">
+        <div class="intro">
+            <h1>Professional Construction Intelligence</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;"><strong style="color: var(--gold);">Generate comprehensive construction reports</strong> in minutes using advanced AI analysis. Upload your project documents and get professional insights across 20 different report types.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>📊 20 Report Types</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Organized by Design, Finance, and Construction</p>
+                </div>
+                <div class="feature">
+                    <h3>📁 Document Analysis</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Upload files - AI reads and analyzes content</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ Instant Results</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Professional reports in 30-60 seconds</p>
+                </div>
+                <div class="feature">
+                    <h3>📥 Export Ready</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Download as Word document</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Project Information</h2>
+            <div class="form-group">
+                <label class="form-label">Project Name</label>
+                <input type="text" class="form-input" id="projectName" placeholder="e.g., Riverside Mixed-Use Development">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-input" id="projectLocation" placeholder="e.g., Brussels, Belgium">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Budget (€)</label>
+                <input type="text" class="form-input" id="projectBudget" placeholder="e.g., 4,200,000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-textarea" id="projectDesc" placeholder="Brief project description..."></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Upload Documents (Optional)</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Upload any text files - AI will read content directly</p>
+            <div class="upload-zone" onclick="document.getElementById('filesInput').click()">
+                <input type="file" id="filesInput" multiple accept=".txt,.pdf,.doc,.docx">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">Click to Upload Files</div>
+                <div style="font-size: 0.9rem; color: var(--text-muted);">Text, PDF, Word files supported</div>
+            </div>
+            <div id="fileList"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Select Reports</h2>
+            <div class="reports-scroll">
+                <div class="report-section">
+                    <div class="section-title">🎨 Design Reports</div>
+                    <div class="reports-grid" id="designReports"></div>
+                </div>
+                
+                <div class="report-section">
+                    <div class="section-title">💰 Finance Reports</div>
+                    <div class="reports-grid" id="financeReports"></div>
+                </div>
+                
+                <div class="report-section">
+                    <div class="section-title">🏗️ Construction Reports</div>
+                    <div class="reports-grid" id="constructionReports"></div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="generateReports()">⚡ Generate Reports</button>
+            </div>
+        </div>
+
+        <div id="resultsSection" style="display: none;"></div>
+    </div>
+
+    <div class="modal" id="apiKeyModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h2 class="modal-title">Connect API Key</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; text-align: center;">
+                Get free at <strong style="color: var(--gold);">console.anthropic.com</strong>
+            </p>
+            <div class="form-group">
+                <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-ant-api03-...">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="saveApiKey()">Connect</button>
+        </div>
+    </div>
+
+    <div class="modal" id="loadingModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h2 class="modal-title">Generating Reports...</h2>
+            <div class="loading-spinner"></div>
+            <p style="text-align: center; color: var(--text-secondary);" id="loadingText">Analyzing documents...</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        // Setup PDF.js worker properly
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+        
+        let apiKey = sessionStorage.getItem('hai_api_key') || '';
+        let files = [];
+        let fileContents = {};
+        // No trial limits - internal version
+        
+        // Function to properly read PDF text
+        async function readPDFText(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+            let fullText = '';
+            
+            // Read all pages
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + '\n\n';
+            }
+            
+            return fullText.substring(0, 20000); // First 20K chars
+        }
+        
+        const REPORTS = {
+            design: [
+                {icon: '✏️', name: 'Design Log'},
+                {icon: '🎨', name: 'Site Assessment'},
+                {icon: '📐', name: 'Material Specifications'},
+                {icon: '📜', name: 'Permits Log'},
+                {icon: '📋', name: 'Progress Report'}
+            ],
+            finance: [
+                {icon: '💰', name: 'Financial Risk Analysis'},
+                {icon: '📈', name: 'Business Plan'},
+                {icon: '💵', name: 'Budget Breakdown'},
+                {icon: '📉', name: 'Cash Flow Forecast'},
+                {icon: '💸', name: 'Cost Estimation'},
+                {icon: '📌', name: 'KPI Report'},
+                {icon: '📄', name: 'Executive Summary'}
+            ],
+            construction: [
+                {icon: '⚠️', name: 'Construction Risk Analysis'},
+                {icon: '💎', name: 'Construction Price Offer'},
+                {icon: '🔍', name: 'Feasibility Study'},
+                {icon: '⚡', name: 'NCR Assessment'},
+                {icon: '🛡️', name: 'HSEC'},
+                {icon: '🔬', name: 'QA/QC'},
+                {icon: '📅', name: 'Schedule Planning'},
+                {icon: '🛒', name: 'Procurement Schedule'}
+            ]
+        };
+        
+        ['design', 'finance', 'construction'].forEach(section => {
+            const grid = document.getElementById(section + 'Reports');
+            grid.innerHTML = REPORTS[section].map(r => `
+                <div class="report-card" onclick="toggleReport(this, '${r.name}')">
+                    <div class="report-icon">${r.icon}</div>
+                    <div class="report-name">${r.name}</div>
+                </div>
+            `).join('');
+        });
+        
+        let selectedReports = [];
+        
+        function toggleReport(element, name) {
+            element.classList.toggle('selected');
+            if (selectedReports.includes(name)) {
+                selectedReports = selectedReports.filter(r => r !== name);
+            } else {
+                selectedReports.push(name);
+            }
+        }
+        
+        if (!apiKey) {
+            setTimeout(() => document.getElementById('apiKeyModal').classList.add('show'), 500);
+        }
+        
+        document.getElementById('filesInput').addEventListener('change', async function(e) {
+            const newFiles = Array.from(e.target.files);
+            
+            // ADD to existing files, don't replace!
+            files = [...files, ...newFiles];
+            
+            showToast(`Reading ${newFiles.length} new file(s)...`);
+            
+            // Load PDF.js worker
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+            
+            for (const file of newFiles) {
+                try {
+                    let text = '';
+                    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                        // Read PDF properly with PDF.js
+                        const arrayBuffer = await file.arrayBuffer();
+                        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+                        
+                        console.log(`PDF loaded: ${file.name} - ${pdf.numPages} pages`);
+                        
+                        // Extract text from all pages
+                        for (let pageNum = 1; pageNum <= Math.min(pdf.numPages, 50); pageNum++) {
+                            const page = await pdf.getPage(pageNum);
+                            const textContent = await page.getTextContent();
+                            const pageText = textContent.items.map(item => item.str).join(' ');
+                            text += pageText + '\n\n';
+                        }
+                        
+                        text = text.substring(0, 100000); // Keep 100K chars per document
+                        console.log(`Extracted ${text.length} characters from ${file.name}`);
+                        console.log(`Content preview:\n${text.substring(0, 500)}`);
+                        
+                    } else {
+                        // Read as plain text
+                        text = await file.text();
+                        text = text.substring(0, 100000);
+                        console.log(`Read text file ${file.name}: ${text.length} characters`);
+                    }
+                    
+                    fileContents[file.name] = text;
+                    
+                } catch (err) {
+                    console.error(`Error reading ${file.name}:`, err);
+                    fileContents[file.name] = '[Could not read file: ' + err.message + ']';
+                }
+            }
+            
+            const list = document.getElementById('fileList');
+            let totalChars = 0;
+            let totalPages = 0;
+            
+            list.innerHTML = files.map(f => {
+                const chars = fileContents[f.name]?.length || 0;
+                totalChars += chars;
+                const isPdf = f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf');
+                const sizeKB = (f.size / 1024).toFixed(1);
+                
+                return `
+                <div class="file-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>📎 ${f.name}</span>
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">
+                            ${sizeKB} KB | ${chars.toLocaleString()} chars ${isPdf ? '| ✓ PDF processed' : '| ✓ Text read'}
+                        </span>
+                    </div>
+                </div>
+            `}).join('');
+            
+            // Add summary at bottom
+            list.innerHTML += `
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(201,168,76,0.1); border-radius: 8px; border: 1px solid rgba(201,168,76,0.3);">
+                    <div style="font-weight: 600; color: var(--gold); margin-bottom: 0.5rem;">📊 Processing Summary:</div>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                        • ${files.length} document${files.length > 1 ? 's' : ''} processed<br>
+                        • ${totalChars.toLocaleString()} total characters extracted<br>
+                        • Ready for AI analysis
+                    </div>
+                </div>
+            `;
+            
+            console.log('All files processed. Total files:', files.length, '| Total content:', Object.keys(fileContents).length);
+            showToast(`✅ ${newFiles.length} new file(s) added! Total: ${files.length} files | ${totalChars.toLocaleString()} chars`);
+        });
+        
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (!key.startsWith('sk-ant-')) {
+                showToast('Invalid API key');
+                return;
+            }
+            apiKey = key;
+            sessionStorage.setItem('hai_api_key', key);
+            document.getElementById('apiKeyModal').classList.remove('show');
+            showToast('API key saved!');
+        }
+        
+        // Rate limit tracking
+        let lastRequestTime = 0;
+        const MIN_REQUEST_INTERVAL = 12000; // 12 seconds between requests (5 per minute)
+        
+        async function generateReports() {
+            if (!apiKey) {
+                document.getElementById('apiKeyModal').classList.add('show');
+                return;
+            }
+            
+            // Check rate limit
+            const now = Date.now();
+            const timeSinceLastRequest = now - lastRequestTime;
+            if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+                const waitSeconds = Math.ceil((MIN_REQUEST_INTERVAL - timeSinceLastRequest) / 1000);
+                showToast(`⏱️ Rate limit - Wait ${waitSeconds}s`);
+                return;
+            }
+            
+            // No trial limits - internal version
+            
+            if (selectedReports.length === 0) {
+                showToast('Please select at least one report');
+                return;
+            }
+            
+            const project = {
+                name: document.getElementById('projectName').value || 'Construction Project',
+                location: document.getElementById('projectLocation').value || 'Not specified',
+                budget: document.getElementById('projectBudget').value || 'Not specified',
+                description: document.getElementById('projectDesc').value || 'No description provided'
+            };
+            
+            const documentsText = Object.entries(fileContents).map(([name, content]) => 
+                `\n═══ ${name} ═══\n${content}`
+            ).join('\n');
+            
+            const docCount = Object.keys(fileContents).length;
+            const docNames = Object.keys(fileContents).join(', ');
+            
+            console.log('Documents being sent to AI:', documentsText.substring(0, 1000));
+            console.log('Total document length:', documentsText.length);
+            
+            if (docCount > 0) {
+                showToast(`📄 Analyzing ${docCount} document${docCount > 1 ? 's' : ''}: ${docNames}`);
+            }
+            
+            document.getElementById('loadingModal').classList.add('show');
+            
+            const results = [];
+            for (const reportType of selectedReports) {
+                document.getElementById('loadingText').textContent = 'Generating ' + reportType + '...';
+                try {
+                    const report = await generateSingleReport(project, reportType, documentsText);
+                    results.push({type: reportType, content: report});
+                } catch (err) {
+                    results.push({type: reportType, content: 'Error: ' + err.message});
+                }
+            }
+            
+            // Update rate limit tracker
+            lastRequestTime = Date.now();
+            
+            // No trial tracking - internal version
+            
+            document.getElementById('loadingModal').classList.remove('show');
+            displayResults(results);
+        }
+        
+        async function generateSingleReport(project, reportType, documentsText) {
+            const isExecutive = reportType === 'Executive Summary';
+            const isPriceOffer = reportType === 'Construction Price Offer';
+            
+            let prompt = '';
+            
+            if (isExecutive) {
+                prompt = `You MUST analyze and use ACTUAL CONTENT from the uploaded documents below.
+
+PROJECT: ${project.name}, ${project.location}, €${project.budget}
+
+UPLOADED DOCUMENTS (READ THIS CAREFULLY):
+${documentsText || '[No documents uploaded]'}
+
+CRITICAL: Base your analysis on SPECIFIC DATA from the documents above. Reference actual numbers, specifications, dates, costs found in the uploaded files.
+
+Create VISUAL Executive Summary:
+
+📊 ${project.name.toUpperCase()}
+${project.location} | Budget: €${project.budget}
+
+✅ STATUS (based on document analysis)
+Overall: [FAVORABLE 🟢/MODERATE 🟡/CHALLENGING 🔴]
+Risk: [LOW/MEDIUM/HIGH]
+Schedule: [ON TRACK ✓/AT RISK ⚠️]
+Budget: [HEALTHY 💰/TIGHT 💸]
+
+🎯 KEY INSIGHTS (from uploaded documents)
+• [Specific finding citing document content]
+• [Specific finding citing document content]
+• [Specific finding citing document content]
+
+⚡ PRIORITIES (based on documents)
+1. [Action based on document data]
+2. [Action based on document data]
+3. [Action based on document data]
+
+💡 RECOMMENDATION: [GO ✅/CAUTION ⚠️/HOLD 🔴]
+[Rationale based on document analysis]
+
+Under 350 words. Use emojis. MUST reference specific content from documents.`;
+            } else if (isPriceOffer) {
+                prompt = `Generate Construction Price Offer based on uploaded documents and market analysis:
+
+PROJECT: ${project.name}
+Location: ${project.location}
+Budget: €${project.budget}
+
+DOCUMENTS:
+${documentsText || '[No documents - use typical construction costs]'}
+
+Create detailed price offer with:
+
+═══════════════════════════════════════
+CONSTRUCTION PRICE OFFER
+${project.name}
+═══════════════════════════════════════
+
+H.A.I CONSTRUCT Analysis
+${new Date().toLocaleString()}
+
+COST BREAKDOWN:
+
+1. SITE PREPARATION & EARTHWORKS
+   • [Item]: €XXX,XXX
+   • [Item]: €XXX,XXX
+   Subtotal: €XXX,XXX
+
+2. FOUNDATION & STRUCTURE
+   • [Item]: €XXX,XXX
+   • [Item]: €XXX,XXX
+   Subtotal: €XXX,XXX
+
+3. BUILDING ENVELOPE
+   • [Item]: €XXX,XXX
+   Subtotal: €XXX,XXX
+
+4. MECHANICAL & ELECTRICAL
+   • [Item]: €XXX,XXX
+   Subtotal: €XXX,XXX
+
+5. FINISHES & FIXTURES
+   • [Item]: €XXX,XXX
+   Subtotal: €XXX,XXX
+
+TOTAL ESTIMATED COST: €X,XXX,XXX
+
+MARKET ANALYSIS:
+• Labour rates: €XX-XX/hour (${project.location} market)
+• Material costs: [Analysis vs market prices]
+• Timeline: XX months estimated
+
+RECOMMENDATIONS:
+• [Cost optimization suggestion]
+• [Alternative material options]
+• [Value engineering opportunities]
+
+Use SPECIFIC data from documents. Include market comparisons. Be detailed (1500+ words).`;
+            } else {
+                prompt = `Generate ${reportType} for construction project:
+
+PROJECT: ${project.name}
+Location: ${project.location}
+Budget: €${project.budget}
+Description: ${project.description}
+
+DOCUMENTS:
+${documentsText || '[No documents]'}
+
+Create professional report with H.A.I CONSTRUCT branding. Use specific data from documents. Format with clear sections, detailed analysis (1500-2000 words).`;
+            }
+
+            let response;
+            try {
+                response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        apiKey: apiKey,
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: isExecutive ? 4000 : 16000, // Much longer, detailed reports
+                        messages: [{role: 'user', content: prompt}]
+                    })
+                });
+            } catch (fetchError) {
+                console.error('Fetch error:', fetchError);
+                throw new Error('Network error. Check your internet connection.');
+            }
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error('API Error:', errorData);
+                throw new Error(errorData.error?.message || 'Generation failed. Check your API key.');
+            }
+            
+            const data = await response.json();
+            return data.content.find(c => c.type === 'text')?.text || 'No content';
+        }
+        
+        function displayResults(results) {
+            const section = document.getElementById('resultsSection');
+            section.innerHTML = results.map((r, i) => `
+                <div class="report-visual">
+                    <div class="report-header">
+                        <span class="modal-close" onclick="this.parentElement.parentElement.remove()">×</span>
+                        <h2>${r.type}</h2>
+                        <div class="report-meta">
+                            Generated by H.A.I CONSTRUCT | ${new Date().toLocaleString()}
+                        </div>
+                    </div>
+                    <div style="white-space: pre-wrap; line-height: 1.8; color: var(--text-secondary);">${r.content}</div>
+                    <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(201,168,76,0.2);">
+                        <button class="btn btn-secondary" onclick="downloadWord(${i})">📥 Download Word</button>
+                        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                            For professional verification: H.Investments NL B.V. | office@hiinvestment.info
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+            section.style.display = 'block';
+            window.generatedReports = results;
+            showToast('✅ Reports generated successfully!');
+        }
+        
+        function downloadWord(idx) {
+            try {
+                const report = window.generatedReports[idx];
+                const content = `H.A.I CONSTRUCT
+by H.Investments NL B.V.
+
+${report.type}
+
+Generated: ${new Date().toLocaleString()}
+
+═══════════════════════════════════════════════════════
+
+${report.content}
+
+═══════════════════════════════════════════════════════
+
+Generated by H.A.I CONSTRUCT
+For professional verification: H.Investments NL B.V.
+Contact: office@hiinvestment.info
+
+© ${new Date().getFullYear()} H.Investments NL B.V.
+`;
+                const blob = new Blob([content], {type: 'application/msword'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `HAI_${report.type.replace(/\s+/g, '_')}_${Date.now()}.doc`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('Download started!');
+            } catch (err) {
+                showToast('Download error: ' + err.message);
+            }
+        }
+        
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
